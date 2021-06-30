@@ -16,77 +16,131 @@ const info = new Vue({
                     number: ''
                 }
             },
-            methods: {
-                addToCart(lesson) {
-                    this.lessons.find(item => item.id == lesson.id).availableInventory -= 1;
-                    this.cart.push({ cartId: (this.cart.length + 1), ...lesson });
+                methods: {
+                decrement_inventory(product) {
+                    product.availableInventory = product.availableInventory - 1;
                 },
-                removeToCart(lesson) {
-                    if (confirm('Do you want to delete this?')) {
-                        this.cart = [...this.cart].filter(item => item.cartId != lesson.cartId)
-                    }
-                },
-                showCheckout() {
-                    this.showProduct = !this.showProduct;
-                },
-                submit() {
-                    if (this.phonenumber(this.user.number)) {
-                        alert('Order submited.')
-                        console.log(this.user);
-                    }
-                },
-                phonenumber(number) {
-                    let phoneno = /^\d{11}$/;
-                    if ((number.match(phoneno))) {
-                        return true;
+                isenable: function (product) {
+                    if (product.availableInventory > 0) {
+                        return true
                     }
                     else {
-                        alert("Phone number invalid.");
-                        return false;
+                        return false
                     }
-                }
+                },
+
+                addtocart: function (product) {
+                    this.cart.push(product);
+                    console.log(product);
+                    this.cartID.push(product.id)
+                   
+
+                    const newavailableInventory = product.availableInventory;
+
+
+                    fetch('https://moscst3145.herokuapp.com/collection/products/' + product._id, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ availableInventory: newavailableInventory })
+                    }).then(function (data) {
+                     
+                     
+                    });
+
+
+                },
+                showcheckout() {
+                    this.showproduct = this.showproduct ? false : true;
+                },
+                removefromcart: function (product) {
+
+                    product.availableInventory = product.availableInventory + 1;
+                    const newavail = product.availableInventory;
+                    this.cart.pop(product)
+                    fetch('https://moscst3145.herokuapp.com/collection/products/' + product._id, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ availableInventory: newavail })
+                    }).then(function (data) {
+                   
+                       
+
+                    });
+
+
+                },
+
+
+                submitForm() {
+                    fetch('https://moscst3145.herokuapp.com/collection/orders', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ Name: this.order.name, Phone: this.order.phone, ProductsInOrders: this.cart.map(({ subject }) => subject) })}).then(function () {
+
+
+                    });
+
+                    this.cart.forEach(element => {
+
+                        fetch('https://moscst3145.herokuapp.com/collection/products/' + element._id, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ availableInventory: element.availableInventory })}).then(function (data) {
+                         
+
+                        });
+
+                    });
+
+
+                    alert('Order submitted')
+                },
+
+                cartCount(id) {
+                    let count = 0;
+                    for (let i = 0; i < this.cartID.length; i++) {
+                        if (this.cartID[i] === id) {
+                            count++
+                        }
+                    }
+                    return count;
+                },
 
             },
+
             computed: {
-                total() {
-                    return this.cart.length > 0 ? this.cart.map(item => item.price).reduce((acc, cur) => acc + cur) : 0;
-                },
-                sortedLessons() {
-                    switch (this.type) {
-                        case 'subject':
-                            return this.lessons.sort((a, b) => {
-                                switch (this.sort) {
-                                    case 'ascending':
-                                        return a.subject.toUpperCase() > b.subject.toUpperCase() ? 1 : -1;
-                                    default:
-                                        return a.subject.toUpperCase() < b.subject.toUpperCase() ? 1 : -1;
-                                }
-                            })
-                        case 'location':
-                            return this.lessons.sort((a, b) => {
-                                switch (this.sort) {
-                                    case 'ascending':
-                                        return a.location.toUpperCase() > b.location.toUpperCase() ? 1 : -1;
-                                    default:
-                                        return a.location.toUpperCase() < b.location.toUpperCase() ? 1 : -1;
-                                }
-                            })
-                        case 'price':
-                            return this.lessons.sort((a, b) => {
-                                return this.sort == 'ascending' ? a.price - b.price : b.price - a.price;
-                            })
-                        case 'space':
-                            return this.lessons.sort((a, b) => {
-                                return this.sort == 'ascending' ? a.availableInventory - b.availableInventory : b.availableInventory - a.availableInventory;
-                            })
-                        default:
-                            return this.lessons.sort((a, b) => {
-                                return this.sort == 'ascending' ? a.id - b.id : b.id - a.id;
-                            })
+                enableshoppingcart: function () {
+                    if (this.cart.length > 0) {
+                        return true
                     }
-                }
+                    else {
+                        return false
+                    }
+                },
+
+
             },
-            created() {
-                this.lessons = lessons
+
+            created: function () {
+
+                fetch('https://moscst3145.herokuapp.com/collection/products').then(
+                    function (response) {
+                        response.json().then(
+                            function (json) {
+                                webstore.products = json;
+                               
+                            });
+                    });
+
             }
+
+
         });
