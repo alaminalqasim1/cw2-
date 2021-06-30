@@ -81,43 +81,98 @@
 
 
     <script type="text/javascript">
-        var webstore = new Vue({
-            el: "#app",
+        const info = new Vue({
+            el: '#app',
             data: {
-                sitename: "After School Lessons",
-                products: [],
-
+                sitename: 'Lessons',
                 lessons: [],
                 cart: [],
-                cartID: [],
-                showproduct: true,
-
+                showProduct: false,
                 order: {
-                    name: "",
-                    phone: null
-
+                    firstName: '',
+                    lastName: '',
                 },
-
+                sort: 'ascending',
+                type: '',
+                user: {
+                    name: '',
+                    number: ''
+                }
             },
             methods: {
-                decrement_inventory(product) {
-                    product.availableInventory = product.availableInventory - 1;
+                addToCart(lesson) {
+                    this.lessons.find(item => item.id == lesson.id).availableInventory -= 1;
+                    this.cart.push({ cartId: (this.cart.length + 1), ...lesson });
                 },
-                isenable: function (product) {
-                    if (product.availableInventory > 0) {
-                        return true
+                removeToCart(lesson) {
+                    if (confirm('Do you want to delete this?')) {
+                        this.cart = [...this.cart].filter(item => item.cartId != lesson.cartId)
+                    }
+                },
+                showCheckout() {
+                    this.showProduct = !this.showProduct;
+                },
+                submit() {
+                    if (this.phonenumber(this.user.number)) {
+                        alert('Order submited.')
+                        console.log(this.user);
+                    }
+                },
+                phonenumber(number) {
+                    let phoneno = /^\d{11}$/;
+                    if ((number.match(phoneno))) {
+                        return true;
                     }
                     else {
-                        return false
+                        alert("Phone number invalid.");
+                        return false;
                     }
+                }
+
+            },
+            computed: {
+                total() {
+                    return this.cart.length > 0 ? this.cart.map(item => item.price).reduce((acc, cur) => acc + cur) : 0;
                 },
-
-                addtocart: function (product) {
-                    this.cart.push(product);
-                    console.log(product);
-                    this.cartID.push(product.id)
-                   
-
+                sortedLessons() {
+                    switch (this.type) {
+                        case 'subject':
+                            return this.lessons.sort((a, b) => {
+                                switch (this.sort) {
+                                    case 'ascending':
+                                        return a.subject.toUpperCase() > b.subject.toUpperCase() ? 1 : -1;
+                                    default:
+                                        return a.subject.toUpperCase() < b.subject.toUpperCase() ? 1 : -1;
+                                }
+                            })
+                        case 'location':
+                            return this.lessons.sort((a, b) => {
+                                switch (this.sort) {
+                                    case 'ascending':
+                                        return a.location.toUpperCase() > b.location.toUpperCase() ? 1 : -1;
+                                    default:
+                                        return a.location.toUpperCase() < b.location.toUpperCase() ? 1 : -1;
+                                }
+                            })
+                        case 'price':
+                            return this.lessons.sort((a, b) => {
+                                return this.sort == 'ascending' ? a.price - b.price : b.price - a.price;
+                            })
+                        case 'space':
+                            return this.lessons.sort((a, b) => {
+                                return this.sort == 'ascending' ? a.availableInventory - b.availableInventory : b.availableInventory - a.availableInventory;
+                            })
+                        default:
+                            return this.lessons.sort((a, b) => {
+                                return this.sort == 'ascending' ? a.id - b.id : b.id - a.id;
+                            })
+                    }
+                }
+            },
+            created() {
+                this.lessons = lessons
+            }
+        });
                     const newavailableInventory = product.availableInventory;
 
 
