@@ -1,4 +1,4 @@
-const lessons = [
+const products = [
     {
         "id": "1",
         "image":"images/img1.jpg" ,
