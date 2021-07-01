@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <title> LESSONS</title>
@@ -12,105 +12,219 @@
 
 <body>
     <div id="app">
-        <!-- Header -->
-        <div class="container">
-            <header>
-                <h1 v-text="sitename"></h1>
-                <button v-if="cart.length > 0" @click='showCheckout'> {{cart.length}} <span
-                        class="fas fa-cart-plus"></span>Checkout</button>
-            </header>
-        </div>
-        <hr>
-        <!-- Body -->
-        <div class="container">
-            <div class="root">
-                <aside>
-                    <h4>Filter by</h4>
-                    <ul>
-                        <li><button @click="type = 'subject'">Subject</button></li>
-                        <li><button @click="type = 'location'">Location</button></li>
-                        <li><button @click="type = 'price'">Price</button></li>
-                    </ul>
-                </aside>
-                <main>
-                    <div v-if='!showProduct'>
-                        <div class="title-bar">
-                            
-                            
-                        </div>
-                        
-                        <div class="lessons">
-                            <div v-for="(lessons, index) in sortedLessons" :key="`lesson--${index}`"
-                                class="lessons__item">
-                                <h2>Lesson{{lessons.id}}</h2>
-                                <figure><img v-bind:src="lessons.image"></figure>
-                                <p>Subject: {{ lessons.subject }}</p>
-                                <p>Location: {{ lessons.location }}</p>
-                                <p>Price: {{ lessons.price }}</p>
-                                <p>Spaces: {{lessons.availableInventory}}</p>
-                                <button v-on:click='addToCart(lessons)' :disabled="!lessons.availableInventory">Add to
-                                    cart</button>
-                                <span v-if="lessons.availableInventory">{{'Left '+ lessons.availableInventory}}</span>
-                                <span v-else>All out!</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div v-else>
-                        <div class="container">
-                            <div class="title-bar">
-                                <button @click="showCheckout"><span class="fas fa-chevron-left"></span> Home</button>
-                                <h4>Total Amount: {{total}}</h4>
-                            </div>
-                            <h4>Item List</h4>
-                            <div class="cart">
-                                <div class="cart__item">
-                                    <div style="width: auto;">Image</div>
-                                    <div>Subject</div>
-                                    <div>Location</div>
-                                    <div>Price</div>
-                                    <div style="width: auto;">Add/Remove</div>
-                                </div>
-                                <hr style="width: 100%">
-                                <div class="cart__item" v-for="(item, index) in cart" :key="`cart--${index}`">
-                                    <div style="width: auto;"><img :src="item.image" alt=""></div>
-                                    <div>{{item.subject}}</div>
-                                    <div>{{item.location}}</div>
-                                    <div>{{item.price}}</div>
-                                    <div style="width: auto;"><button @click="removeToCart(item)"><i style="color:red;"
-                                                class="fa fa-minus" aria-hidden="true"></i></button></div>
-                                </div>
-                                <div v-if="!cart.length > 0" class="cart__item"
-                                    style="background-color: transparent; padding: 20px;">
-                                    <div style="text-align: center; color: gray; font-size: 20px; font-weight: bold;">
-                                        List Empty</div>
-                                </div>
-                            </div>
-                            <hr>
-                            <div>
-                                <h3>User Info</h3>
-                                <form @submit.prevent="submit">
-                                    <div>
-                                        <label for="name">Name:</label>
-                                        <input v-model="user.name" type="text" required>
-                                    </div>
-                                    <div>
-                                        <label for="name">Phone:</label>
-                                        <input v-model="user.number" type="tel" required>
-                                    </div>
-                                    <input type="submit" value="Checkout">
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </main>
+
+        <!-- shoping cart -->
+        <header>
+            <h1>{{sitename}}</h1>
+            <button  v-on:click="showcheckout" v-if="enableshoppingcart">shopping cart</button>
+            <P v-else>Shopping Cart</P>
+            <div v-for="product in cart" style="display:inline-block;">
+                <figure>
+                    <img v-bind:src="product.image" width="200" height="200">
+                </figure>
+                <h2 v-html="product.subject"></h2>
+               <span> <P>Locatioc:{{product.location}}</P>
+                <p>Price:{{product.price}}</p>
+                <P>Number of spaces: {{product.availableInventory}}</P>
+            </span>
+                <button class="fa fa-trash" v-on:click="removefromcart(product)"> Remove Product</button>
             </div>
-        </div>
+        </header>
+
+        <main>
+            <div v-if="showproduct">
+
+                <div v-for="product in products">
+
+                    <figure>
+                        <img v-bind:src="product.image" width="200" height="200">
+                    </figure>
+
+                    <h2 v-html="product.subject"></h2>
+                    <p>ID : {{ product._id}}</p>
+                    <P>Location: {{product.location}}</P>
+                    <p>Price: {{product.price}}</p>
+                    <P>Number of spaces: {{product.availableInventory}}</P>
+                    <button v-on:click="decrement_inventory(product); addtocart(product); " v-if="isenable(product)">
+                        ADD TO CART</button>
+                    <!-- only show the button when 'canAddToCart' is true when it becomes false the button disappers -->
+
+                    <button disabled="disabled" v-else>DISABLE</button>
+                </div>
+            </div>
+
+            <div v-else>
+                <h2>Checkout</h2>
+
+
+                <form @submit="submitForm">
+                    <ul>
+                        <p>
+                            <strong>Name:</strong>
+                            <input id="name" required v-model.trim="order.name" type="text" />
+                        </p>
+                        <p><strong>Phone : </strong><input id="phone" required v-model.number='order.phone'
+                                type="number"></p>
+
+
+                        <input type="submit">
+                </form>
+
+            </div>
+        </main>
     </div>
-    <!-- JS Files -->
-    <script src="./product.js"></script>
-    <script src="./vue.js">
+
+
+    <script type="text/javascript">
+        var webstore = new Vue({
+            el: "#app",
+            data: {
+                sitename: "After School Lessons",
+                products: [],
+
+                lessons: [],
+                cart: [],
+                cartID: [],
+                showproduct: true,
+
+                order: {
+                    name: "",
+                    phone: null
+
+                },
+
+            },
+            methods: {
+                decrement_inventory(product) {
+                    product.availableInventory = product.availableInventory - 1;
+                },
+                isenable: function (product) {
+                    if (product.availableInventory > 0) {
+                        return true
+                    }
+                    else {
+                        return false
+                    }
+                },
+
+                addtocart: function (product) {
+                    this.cart.push(product);
+                    console.log(product);
+                    this.cartID.push(product.id)
+                   
+
+                    const newavailableInventory = product.availableInventory;
+
+
+                    fetch('https://cstcw.herokuapp.com/collection/products/' + product._id, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ availableInventory: newavailableInventory })
+                    }).then(function (data) {
+                     
+                     
+                    });
+
+
+                },
+                showcheckout() {
+                    this.showproduct = this.showproduct ? false : true;
+                },
+                removefromcart: function (product) {
+
+                    product.availableInventory = product.availableInventory + 1;
+                    const newavail = product.availableInventory;
+                    this.cart.pop(product)
+                    fetch('https://cstcw.herokuapp.com/collection/products/' + product._id, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ availableInventory: newavail })
+                    }).then(function (data) {
+                   
+                       
+
+                    });
+
+
+                },
+
+
+                submitForm() {
+                    fetch('https://cstcw.herokuapp.com/collection/orders', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ Name: this.order.name, Phone: this.order.phone, ProductsInOrders: this.cart.map(({ subject }) => subject) })}).then(function () {
+
+
+                    });
+
+                    this.cart.forEach(element => {
+
+                        fetch('cstcw.herokuapp.com/collection/products/' + element._id, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ availableInventory: element.availableInventory })}).then(function (data) {
+                         
+
+                        });
+
+                    });
+
+
+                    alert('Order submitted')
+                },
+
+                cartCount(id) {
+                    let count = 0;
+                    for (let i = 0; i < this.cartID.length; i++) {
+                        if (this.cartID[i] === id) {
+                            count++
+                        }
+                    }
+                    return count;
+                },
+
+            },
+
+            computed: {
+                enableshoppingcart: function () {
+                    if (this.cart.length > 0) {
+                        return true
+                    }
+                    else {
+                        return false
+                    }
+                },
+
+
+            },
+
+            created: function () {
+
+                fetch('https://cstcw.herokuapp.com/collection/products').then(
+                    function (response) {
+                        response.json().then(
+                            function (json) {
+                                webstore.products = json;
+                               
+                            });
+                    });
+
+            }
+
+
+        });
 
     </script>
+
 </body>
 
 </html>
