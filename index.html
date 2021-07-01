@@ -87,17 +87,23 @@
                             </div>
                             <hr>
                             <div>
-                                <h3>User Info</h3>
-                                <form @submit.prevent="submit">
-                                    <div>
-                                        <label for="name">Name:</label>
-                                        <input v-model="user.name" type="text" required>
-                                    </div>
-                                    <div>
-                                        <label for="name">Phone:</label>
-                                        <input v-model="user.number" type="tel" required>
-                                    </div>
-                                    <input type="submit" value="Checkout">
+                                     <h2>Checkout</h2>
+
+
+                <form @submit="submitForm">
+                    <ul>
+                        <p>
+                            <strong>Name:</strong>
+                            <input id="name" required v-model.trim="order.name" type="text" />
+                        </p>
+                        <p><strong>Phone : </strong><input id="phone" required v-model.number='order.phone'
+                                type="number"></p>
+
+
+                        <input type="submit">
+                </form>
+
+            </div>
                                 </form>
                             </div>
                         </div>
