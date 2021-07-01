@@ -25,14 +25,14 @@
             <P v-else>Shopping Cart</P>
             <div v-for="product in cart" style="display:inline-block;">
                 <figure>
-                    <img v-bind:src="product.image" width="200" height="200">
+                    <img v-bind:src="products.image" width="200" height="200">
                 </figure>
-                <h2 v-html="product.subject"></h2>
+                <h2 v-html="products.subject"></h2>
                <span> <P>Locatioc:{{product.location}}</P>
-                <p>Price:{{product.price}}</p>
-                <P>Number of spaces: {{product.availableInventory}}</P>
+                <p>Price:{{products.price}}</p>
+                <P>Number of spaces: {{products.availableInventory}}</P>
             </span>
-                <button class="fa fa-trash" v-on:click="removefromcart(product)"> Remove Product</button>
+                <button class="fa fa-trash" v-on:click="removefromcart(products)"> Remove Product</button>
             </div>
         </header>
 
@@ -46,10 +46,10 @@
                     </figure>
 
                     <h2 v-html="product.subject"></h2>
-                    <p>ID : {{ product._id}}</p>
-                    <P>Location: {{product.location}}</P>
-                    <p>Price: {{product.price}}</p>
-                    <P>Number of spaces: {{product.availableInventory}}</P>
+                    <p>ID : {{ products._id}}</p>
+                    <P>Location: {{products.location}}</P>
+                    <p>Price: {{products.price}}</p>
+                    <P>Number of spaces: {{products.availableInventory}}</P>
                     <button v-on:click="decrement_inventory(product); addtocart(product); " v-if="isenable(product)">
                         ADD TO CART</button>
                     <!-- only show the button when 'canAddToCart' is true when it becomes false the button disappers -->
