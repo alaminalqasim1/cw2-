@@ -2,12 +2,17 @@
 <html lang="en">
 
 <head>
-    <title> LESSONS</title>
-    <!-- <script src="./vue.js"></script> -->
-   
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-  
+    <title>CW 2 - Individual</title>
+    <script src="https://unpkg.com/vue"> </script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import Materialize CSS Stylesheet-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" />
+    <!-- Font Awesome icon -->
+    <link type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    rel="stylesheet">
 
+   
 </head>
 
 <body>
@@ -116,7 +121,7 @@
                     const newavailableInventory = product.availableInventory;
 
 
-                    fetch('https://cstcw.herokuapp.com/collection/products/' + product._id, {
+                    fetch('https://cstcw.herokuapp.com/collection/products' + product._id, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -137,7 +142,7 @@
                     product.availableInventory = product.availableInventory + 1;
                     const newavail = product.availableInventory;
                     this.cart.pop(product)
-                    fetch('https://cstcw.herokuapp.com/collection/products/' + product._id, {
+                    fetch('https://cstcw.herokuapp.com/collection/products' + product._id, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -166,7 +171,7 @@
 
                     this.cart.forEach(element => {
 
-                        fetch('cstcw.herokuapp.com/collection/products/' + element._id, {
+                        fetch('https://cstcw.herokuapp.com/collection/products' + element._id, {
                             method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json',
