@@ -1,5 +1,5 @@
 GitHub Page that runs front end (the Vue.js code)
-https://alaminalqasim1.github.io/cw2/index.html
+https://alaminalqasim1.github.io/cw2-/index.html
 
 GitHub repository of your back end code (Node and Express)
 https://github.com/alaminalqasim1/cw2-/server.js
