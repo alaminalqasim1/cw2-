@@ -1,5 +1,3 @@
-# mycw2
-
 GitHub Page that runs front end (the Vue.js code)
 https://alaminalqasim1.github.io/cw2/index.html
 
