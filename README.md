@@ -5,7 +5,7 @@ GitHub repository of your back end code (Node and Express)
 https://github.com/hmodu/Course-work-2/blob/main/server.js
 
 The Heroku route that returns the information of lesson information.
-https://alaminalqasim1.github.io/cw2-/products.json
+https://cstcw.herokuapp.com/collection/products.json
 
 The Heroku route that returns the information of order information.
-https://moscst3145.herokuapp.com/collection/orders
+https://cstcw.herokuapp.com/collection/orders
