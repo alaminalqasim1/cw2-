@@ -14,7 +14,7 @@ const MongoClient = require("mongodb").MongoClient
 
 let db;
 
-MongoClient.connect("mongodb+srv://alamin1:Pa55w0rd@12345@cluster0.esp1f.mongodb.net/webstore?retryWrites=true&w=majority", (err, client) => {
+MongoClient.connect("mongodb+srv://alamin1:Pa55w0rds@12345@cluster0.esp1f.mongodb.net/webstore?retryWrites=true&w=majority", (err, client) => {
 
     db = client.db('webstore')
 })
